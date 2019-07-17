@@ -69,14 +69,18 @@ set smartindent					  " インデントはスマートインデント
 set showmatch					  " 括弧入力時の対応する括弧を表示
 set laststatus=2				  " ステータスラインを常に表示
 set wildmode=list:longest		  " コマンドラインの補完
-syntax enable					  " シンタックスハイライトの有効化
 set clipboard=unnamedplus		  " クリップボードの有効化
+
+syntax enable					  " シンタックスハイライトの有効化
 
 " カーソルの左右移動で行末から次の行の行頭への移動が可能になる
 set whichwrap=b,s,h,l,<,>,[,],~ 
 
 " Tab系 -----------------------------------------------------------
-"set list listchars=tab:\▸\- 	" 不可視文字を可視化(タブが「▸-」と表示される)
+"set list                        " 不可視文字の可視化
+"set listchars=tab:▸             " 不可視文字を可視化(タブが「▸-」と表示される)
+"set listchars=tab:             " 不可視文字を可視化(タブが「▸-」と表示される)
+"set listchars=trail:-,eol:↲
 set expandtab 					" Tab文字を半角スペースにする
 set tabstop=4 					" 行頭以外のTab文字の表示幅（スペースいくつ分）
 set shiftwidth=4 				" 行頭でのTab文字の表示幅
@@ -98,7 +102,10 @@ if &compatible
   set nocompatible               " Be iMproved
 endif
 
+"プラグインが実際にインストールされるディレクトリ
 let s:dein_path = expand('~/.vim/dein')
+
+"dein.vim本体
 let s:dein_repo_path = s:dein_path . '/repos/github.com/Shougo/dein.vim'
 
 " dein.vim がなければ github からclone
@@ -106,9 +113,11 @@ if &runtimepath !~# '/dein.vim'
   if !isdirectory(s:dein_repo_path)
     execute '!git clone https://github.com/Shougo/dein.vim' s:dein_repo_path
   endif
-  execute 'set runtimepath^=' . fnamemodify(s:dein_repo_path, ':p')
+  "execute 'set runtimepath^=' . fnamemodify(s:dein_repo_path, ':p')
+  execute 'set runtimepath^=' . s:dein_repo_path
 endif
 
+"設定開始
 if dein#load_state(s:dein_path)
   call dein#begin(s:dein_path)
 
@@ -119,6 +128,7 @@ if dein#load_state(s:dein_path)
   " TOML 読み込み
   call dein#load_toml(s:toml,      {'lazy': 0})
   call dein#load_toml(s:lazy_toml, {'lazy': 1})
+"設定終了
 
   call dein#end()
   call dein#save_state()
@@ -134,4 +144,22 @@ if dein#check_install()
   call dein#install()
 endif
 "End dein Scripts-------------------------
+
+
+" NERDTree の設定 -------------------------------------------------------------
+" ディレクトリ表示の設定
+let NERDTreeNodeDelimiter = "\t"
+let g:NERDTreeGlyphReadOnly = 1
+let g:NERDTreeDirArrows = 1
+let g:NERDTreeDirArrowExpandable  = '→'
+let g:NERDTreeDirArrowCollapsible = '↓'
+
+"vim起動時にNERDTreeを自動起動させる
+"autocmd VimEnter * execute 'NERDTree'
+
+" F9 で NERDTree を起動
+nnoremap <silent> <F9> :NERDTreeToggle<CR>
+
+" F10 で NERDTree を起動
+nnoremap <silent> <F8> :TrinityToggleAll<CR>
 
